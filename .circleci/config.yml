@@ -11,15 +11,15 @@ jobs:
           command: |
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
 
-            # build base containers first
+            # build base images first
             docker build ./base/v1 -t mvpstudio/base:v1
             docker push mvpstudio/base:v1
 
-            # then language specific containers
+            # then language specific images
             docker build ./node/10 -t mvpstudio/node:10
             docker push mvpstudio/node:10
 
-            # then general purpose containers
+            # then general purpose images
 
 workflows:
   version: 2
