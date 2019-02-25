@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build-and-publish:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Build/Tag/Push Docker Image
+          command: |
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+
+            # build base containers first
+            docker build ./base/v1 -t mvpstudio/base -t mvpstudio/base:v1
+            
+            # then language specific containers
+            docker build ./node/10 -t mvpstudio/node -t mvpstudio/node:10
+
+            # then general purpose containers
+
+workflows:
+  version: 2
+  build-and-publish-images:
+    jobs:
+      - build-and-publish:
+          context: dockerhub-publish
+          filters:
+            branches:
+              only: master
