@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build-and-publish:
+  base:
     docker:
       - image: circleci/python:3
     steps:
@@ -11,31 +11,87 @@ jobs:
           command: |
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
 
-            # build base images first
             docker build ./base/v1 -t mvpstudio/base:v1
             docker push mvpstudio/base:v1
 
-            # then language specific images
+  node:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Build/Tag/Push Docker Image
+          command: |
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+
             docker build ./node/10 -t mvpstudio/node:10
             docker push mvpstudio/node:10
+
+  java:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Build/Tag/Push Docker Image
+          command: |
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
 
             docker build ./java/8 -t mvpstudio/java:8
             docker push mvpstudio/java:8
 
-            docker build ./php/7 -t mvpstudio/php:7
-            docker push mvpstudio/php:7
+  php:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Build/Tag/Push Docker Image
+          command: |
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
 
             docker build ./golang/1.12 -t mvpstudio/golang:1.12
             docker push mvpstudio/golang:1.12
 
-            # then general purpose images
+  golang:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Build/Tag/Push Docker Image
+          command: |
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
 
-workflows:
-  version: 2
-  build-and-publish-images:
-    jobs:
-      - build-and-publish:
-          context: dockerhub-publish
-          filters:
-            branches:
-              only: master
+            docker build ./php/7 -t mvpstudio/php:7
+            docker push mvpstudio/php:7
+
+build-publish-all:
+  triggers:
+    schedule:
+      filters:
+        branches:
+          only: master
+  jobs:
+    - base:
+        context: dockerhub-publish
+    - node:
+        context: dockerhub-publish
+        requires:
+          - base
+    - java:
+        context: dockerhub-publish
+        requires:
+          - base
+    - php:
+        context: dockerhub-publish
+        requires:
+          - base
+    - golang:
+        context: dockerhub-publish
+        requires:
+          - base
