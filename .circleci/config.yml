@@ -19,6 +19,9 @@ jobs:
             docker build ./node/10 -t mvpstudio/node:10
             docker push mvpstudio/node:10
 
+            docker build ./java/8 -t mvpstudio/java:8
+            docker push mvpstudio/java:8
+
             # then general purpose images
 
 workflows:
