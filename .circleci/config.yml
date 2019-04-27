@@ -42,7 +42,7 @@ jobs:
             docker build ./java/8 -t mvpstudio/java:8
             docker push mvpstudio/java:8
 
-  php:
+  golang:
     docker:
       - image: circleci/python:3
     steps:
@@ -56,7 +56,7 @@ jobs:
             docker build ./golang/1.12 -t mvpstudio/golang:1.12
             docker push mvpstudio/golang:1.12
 
-  golang:
+  php:
     docker:
       - image: circleci/python:3
     steps:
@@ -83,27 +83,15 @@ workflows:
           context: dockerhub-publish
           requires:
             - base
-          filters:
-            branches:
-              only: master
       - java:
           context: dockerhub-publish
           requires:
             - base
-          filters:
-            branches:
-              only: master
       - php:
           context: dockerhub-publish
           requires:
             - base
-          filters:
-            branches:
-              only: master
       - golang:
           context: dockerhub-publish
           requires:
             - base
-          filters:
-            branches:
-              only: master
