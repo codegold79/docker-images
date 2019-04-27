@@ -22,6 +22,12 @@ jobs:
             docker build ./java/8 -t mvpstudio/java:8
             docker push mvpstudio/java:8
 
+            docker build ./php/7 -t mvpstudio/php:7
+            docker push mvpstudio/php:7
+
+            docker build ./golang/1.12 -t mvpstudio/golang:1.12
+            docker push mvpstudio/golang:1.12
+
             # then general purpose images
 
 workflows:
