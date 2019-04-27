@@ -56,7 +56,7 @@ jobs:
             docker build ./golang/1.12 -t mvpstudio/golang:1.12
             docker push mvpstudio/golang:1.12
 
-  php:
+  python:
     docker:
       - image: circleci/python:3
     steps:
@@ -67,8 +67,8 @@ jobs:
           command: |
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
 
-            docker build ./php/7 -t mvpstudio/php:7
-            docker push mvpstudio/php:7
+            docker build ./python/7 -t mvpstudio/python:7
+            docker push mvpstudio/python:7
 
 workflows:
   version: 2
@@ -87,11 +87,11 @@ workflows:
           context: dockerhub-publish
           requires:
             - base
-      - php:
+      - golang:
           context: dockerhub-publish
           requires:
             - base
-      - golang:
+      - python:
           context: dockerhub-publish
           requires:
             - base
