@@ -1,6 +1,8 @@
 FROM mvpstudio/base:v1
-# The bash commands here set up yarn and node to come from their repos instead of the Debian one
-# so that we get modern versions (Debian is *waaay* behind on versions).
-RUN add-apt-repository ppa:gophers/archive && \
-	apt-get update && \
-	apt-get install golang-1.12-go
+
+RUN curl -o /usr/local/go1.12.2.linux-amd64.tar.gz https://dl.google.com/go/go1.12.2.linux-amd64.tar.gz
+RUN tar -C /usr/local -xvf /usr/local/go1.12.2.linux-amd64.tar.gz
+
+RUN export GOROOT=/usr/local/go
+RUN export GOPATH=/home/mvp/app
+RUN export PATH=$GOPATH/bin:$GOROOT/bin:$PATH

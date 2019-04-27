@@ -67,8 +67,8 @@ jobs:
           command: |
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
 
-            docker build ./python/7 -t mvpstudio/python:7
-            docker push mvpstudio/python:7
+            docker build ./python/3 -t mvpstudio/python:3
+            docker push mvpstudio/python:3
 
 workflows:
   version: 2
